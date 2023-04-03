@@ -270,3 +270,41 @@ history = model.fit(X_train, to_categorical(y_train),
 test_loss, test_acc = model.evaluate(X_test, to_categorical(y_test))
 print('Test accuracy:', test_acc)
 print('Test test_loss:', test_loss)
+
+
+
+
+# Voluntary steps
+from sklearn.model_selection import GridSearchCV
+from keras.wrappers.scikit_learn import KerasClassifier
+
+# Define a function that creates the model
+def create_model(hidden_layers=1, nodes=32, dropout_rate=0.2, reg_rate=0.01):
+    model = Sequential()
+    model.add(Dense(nodes, activation='relu', input_dim=X_train.shape[1]))
+    model.add(Dropout(dropout_rate))
+    for i in range(hidden_layers):
+        model.add(Dense(nodes, activation='relu', kernel_regularizer=l2(reg_rate)))
+        model.add(Dropout(dropout_rate))
+    model.add(Dense(2, activation='softmax'))
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    return model
+
+# Create an instance of the KerasClassifier wrapper
+keras_classifier = KerasClassifier(build_fn=create_model, verbose=0)
+
+# Define the hyperparameters grid to search over
+param_grid = {'hidden_layers': [1, 2, 3],
+              'nodes': [32, 64, 128],
+              'dropout_rate': [0.1, 0.2, 0.3],
+              'reg_rate': [0.001, 0.01, 0.1]}
+
+# Create an instance of the GridSearchCV class
+grid_search = GridSearchCV(keras_classifier, param_grid, cv=3, verbose=2)
+
+# Fit the GridSearchCV instance on the training data
+grid_search.fit(X_train, to_categorical(y_train), epochs=50, batch_size=32, validation_split=0.2)
+
+# Print the best hyperparameters and corresponding score
+print("Best score:", grid_search.best_score_)
+print("Best params:", grid_search.best_params_)
