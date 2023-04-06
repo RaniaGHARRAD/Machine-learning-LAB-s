@@ -382,12 +382,3 @@ plt.show()
 #Number of features: 3 Validation MSE: 0.06318943947553635
 #Number of features: 5 Validation MSE: 0.060656312853097916
 #Number of features: 7 Validation MSE: 0.062497127801179886
-
-
-#These results mean that as the number of selected features increases, the validation MSE decreases
-#. This suggests that using more features leads to a more accurate regression model. 
-#However, it is important to note that this trend may not always hold,
-#as selecting too many features can lead to overfitting and a decrease in model performance on new data. 
-#Therefore, it is important to strike a balance between the number of features used 
-#and the performance of the model. In this case, it seems that using 5 features gives 
-#the best trade-off between model complexity and performance.
